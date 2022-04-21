@@ -1,0 +1,20 @@
+textarea {
+  overflow: hidden;
+  padding: 8px;
+  border: 0;
+  border-radius: var(--ls-border-radius-low);
+  font-size: 1em;
+  line-height: 1.5;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  width: 100%;
+  color: #a3a98f;
+  resize: none;
+  outline: 0;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-size-adjust: 100%;
+  background: #002b36;
+  height: 24px !important;
+}
