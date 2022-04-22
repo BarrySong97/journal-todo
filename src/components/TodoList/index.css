@@ -15,6 +15,6 @@ textarea {
   font-weight: inherit;
   letter-spacing: inherit;
   text-size-adjust: 100%;
-  background: #002b36;
+  /* background: #002b36; */
   height: 24px !important;
 }

@@ -1,20 +1,32 @@
-import { Checkbox, Input } from "@douyinfe/semi-ui";
 import { FC, useRef, useState } from "react";
-import { createReactEditorJS } from "react-editor-js";
 import { v4 as uuidv4 } from "uuid";
 import "./index.css";
-import { TodoItem } from "../../App";
-import { IconRadio } from "@douyinfe/semi-icons";
 import Block, { BlockProps } from "../Block";
+import { useEffect } from "react";
 export interface TodoListProps {}
 
 const TodoList: FC<TodoListProps> = ({}) => {
-  const [blocks, setBlocks] = useState<BlockProps[]>([{ id: uuidv4() }]);
+  const [blocks, setBlocks] = useState<BlockProps[]>([
+    { id: uuidv4(), focus: true, selectionStart: 0 },
+  ]);
   const itemsRef = useRef<HTMLTableColElement[]>([]);
+  useEffect(() => {
+    blocks.forEach((v, i) => {
+      if (v.focus) {
+        itemsRef.current[i]?.focus();
+        itemsRef.current[i]?.setSelectionRange(
+          v.selectionStart,
+          v.selectionStart
+        );
+      }
+    });
+  }, [blocks]);
   return (
     <div style={{ color: "#a4b5b6" }} onKeyDown={(e) => {}}>
       {blocks.map((v, i) => (
         <Block
+          selectionStart={v.selectionStart}
+          focus={v.focus}
           ref={(el) => {
             itemsRef.current[i] = el;
           }}
@@ -24,18 +36,35 @@ const TodoList: FC<TodoListProps> = ({}) => {
             console.log(e.code);
 
             if (e.code === "Enter") {
-              setBlocks([...blocks, { id: uuidv4() }]);
+              blocks.forEach((v) => {
+                v.focus = false;
+              });
+              setBlocks([
+                ...blocks,
+                { id: uuidv4(), focus: true, selectionStart: 0 },
+              ]);
 
               e.preventDefault();
             }
 
             if (e.code === "ArrowDown" && i !== blocks.length - 1) {
-              itemsRef.current?.[i + 1].focus();
+              blocks[i + 1].focus = true;
+              blocks[i + 1].selectionStart =
+                itemsRef.current[i]?.selectionStart;
+              blocks[i].focus = false;
+
+              setBlocks([...blocks]);
               e.preventDefault();
             }
 
             if (e.code === "ArrowUp" && i !== 0) {
-              itemsRef.current?.[i - 1].focus();
+              console.log(blocks);
+
+              blocks[i].focus = false;
+              blocks[i - 1].focus = true;
+              blocks[i - 1].selectionStart =
+                itemsRef.current[i]?.selectionStart;
+              setBlocks([...blocks]);
               e.preventDefault();
             }
 
